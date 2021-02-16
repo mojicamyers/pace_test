@@ -1,0 +1,208 @@
+<! DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum scale=1, user-scalable=no">
+        <title>SNAP Map</title>
+        <style>
+            html,body,#viewDiv{
+                padding:0;
+                margin: 0;
+                height: 100%;
+                width:  100%;
+            }
+        </style>
+        <link rel="stylesheet" href="https://js.arcgis.com/4.17/esri/css/main.css">
+        <script src="https://js.arcgis.com/4.17/"></script>
+        
+        <script>
+            require([
+                "esri/config",
+                "esri/core/urlUtils",
+                "esri/Map",
+                "esri/views/MapView",
+                "esri/layers/CSVLayer",
+                "esri/widgets/Legend",
+                "esri/widgets/LayerList",
+                "dojo/domReady!"
+            ], function(
+                    esriConfig, urlUtils, Map, MapView, CSVLayer, Legend, LayerList){
+                
+                
+                var myMap = new Map({
+                    basemap: "topo"
+                });
+                
+                var myView = new MapView({
+                    map: myMap,
+                    container: "viewDiv",
+                    center: [-82.05587, 39.46],
+                    zoom:8
+                    
+                });
+                
+                
+                ////////// Big Box Stores
+                
+                var bigBox = new CSVLayer({
+                    url:"https://www.dl.dropboxusercontent.com/s/eskn8a4se7q7mz0/SNAP_BigBox.csv?dl=0",                   
+                });
+                
+                bigBox.renderer = {
+                    type:"simple", //which outcast new SimpleRenderer
+                    symbol:{
+                        type: "simple-marker",
+                        color: "red",
+                        size: 10,
+                        outline:{
+                            width: 0.5,
+                            color: "white"
+                        }
+                    }
+                };
+                
+                myMap.add(bigBox);
+                
+                
+                
+                ////////// Convenience Stores
+                
+                var convenienceStore = new CSVLayer({
+                    url:"https://www.dl.dropboxusercontent.com/s/lxqxmf7dwyevyix/SNAP_ConvenienceStore.csv?dl=0",                   
+                });
+                
+                convenienceStore.renderer = {
+                    type:"simple", //which outcast new SimpleRenderer
+                    symbol:{
+                        type: "simple-marker",
+                        color: "orange",
+                        size: 10,
+                        outline:{
+                            width: 0.5,
+                            color: "white"
+                        }
+                    }
+                };
+                
+                myMap.add(convenienceStore);
+                
+                
+                
+                ////////// Farmer's Markets and Specialty Stores
+                
+                var farmerMarketSpecialty = new CSVLayer({
+                    url:"https://www.dl.dropboxusercontent.com/s/iipsivx6iqnlqxj/SNAP_FarmersMarket_Specialty.csv?dl=0",                   
+                });
+                
+                farmerMarketSpecialty.renderer = {
+                    type:"simple", //which outcast new SimpleRenderer
+                    symbol:{
+                        type: "simple-marker",
+                        color: "yellow",
+                        size: 10,
+                        outline:{
+                            width: 0.5,
+                            color: "white"
+                        }
+                    }
+                };
+                
+                myMap.add(farmerMarketSpecialty);
+                
+                
+                
+                ////////// Grocery Stores
+                
+                var groceryStore = new CSVLayer({
+                    url:"https://www.dl.dropboxusercontent.com/s/husg8ay1f1ha0au/SNAP_GroceryStore.csv?dl=0",                   
+                });
+                
+                groceryStore.renderer = {
+                    type:"simple", //which outcast new SimpleRenderer
+                    symbol:{
+                        type: "simple-marker",
+                        color: "green",
+                        size: 10,
+                        outline:{
+                            width: 0.5,
+                            color: "white"
+                        }
+                    }
+                };
+                
+                myMap.add(groceryStore);
+                
+                
+                
+                ////////// Small Box Stores
+                
+                var smallBox = new CSVLayer({
+                    url:"https://www.dl.dropboxusercontent.com/s/hh945smt115ustb/SNAP_SmallBox.csv?dl=0",                   
+                });
+                
+                smallBox.renderer = {
+                    title:"Small Box",
+                    type:"simple", //which outcast new SimpleRenderer
+                    symbol:{
+                        type: "simple-marker",
+                        color: "blue",
+                        size: 10,
+                        outline:{
+                            width: 0.5,
+                            color: "white"
+                        }
+                    }
+                };
+                
+                myMap.add(smallBox);
+                
+                
+                var myLegend = new Legend({
+                    view: myView,
+                    layerInfos:[{
+                    layer: bigBox,
+                    title: "Big Box",
+                    },{
+                    layer: convenienceStore,
+                    title: "Convenience Store"
+                    },{
+                    layer:farmerMarketSpecialty,
+                    title: "Farmer's Market / Specialty Store"
+                    },{
+                    layer:groceryStore,
+                    title: "Grocery Store"
+                    },{
+                    layer:smallBox,
+                    title: "Small Box"
+                    }]
+                });
+                
+                myView.ui.add(myLegend, "top-left");
+                
+                
+                
+                   myView.when(function(){
+                    var layerslisted = new LayerList({
+                        view: myView, 
+                    });
+                    
+                    myView.ui.add(layerslisted,{position:"bottom-left"});
+                });
+                
+                
+                
+                
+                
+                
+            });
+                
+            
+            
+        </script>
+    </head>
+    <body>
+    
+        <div id="viewDiv"></div>
+    
+    </body>
+</html>
